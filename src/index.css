@@ -1,0 +1,479 @@
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+#nav-header {
+  text-align: center;
+  background-color: rgb(215, 58, 89);
+  margin-left: 20px;
+  padding: 20px;
+  color: white;
+}
+
+
+/* Navbar */
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  margin: 0 50px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  text-decoration: none;
+}
+
+.nav-number {
+  border: 1px solid white;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-label,
+.profile-title {
+  font-size: 22px;
+}
+
+.nav-line {
+  flex: 1;
+  height: 1px;
+}
+.nav-item.active .nav-number {
+  background-color: rgb(215, 58, 89);
+  color: white;
+}
+
+.nav-item.active .nav-label {
+  color: rgb(215, 58, 89);
+}
+
+
+
+
+/* Profile Section */
+
+.section-container {
+  text-align: center;
+}
+
+.section-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin: 30px 30px 0;
+  border: 2px solid white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 400px;
+  margin-left: 50px;
+}
+
+.profile-image {
+  text-align: left;
+  font-size: 22px;
+}
+
+.profile-image-input {
+  font-size: 20px;
+  border: 1px solid white;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 10px;
+}
+
+#back, .back {
+  background-color: transparent;
+  border-radius: 5px;
+  font-size: 22px;
+  padding: 5px;
+}
+
+#back {
+  cursor: not-allowed;
+}
+
+#next, #save, #addBtn {
+  border-radius: 5px;
+  font-size: 22px;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+#next, #save {
+  background-color: rgb(215, 58, 89);
+}
+
+.section-inputs input {
+  padding: 30px;
+  width: 80%;
+  border-radius: 8px;
+  border: none;
+  background-color: white;
+  color: black;
+  font-size: 22px;
+}
+
+#next a {
+  color: white;
+  text-decoration: none;
+}
+
+
+
+/* Education Section */
+.section-form-btns {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+#deleteBtn {
+  border-radius: 5px;
+  font-size: 22px;
+  padding: 10px;
+  border: none;
+}
+
+#deleteBtn:active {
+  background-color: red;
+}
+
+#addBtn {
+  background-color: rgb(97, 97, 237);
+}
+
+.title {
+  margin-top: 50px;
+  font-size: 22px;
+}
+
+.section-action, .edu-form {
+  margin-top:40px;
+}
+
+.back a {
+  color: white;
+  text-decoration: none;
+}
+
+
+
+
+/* Skill Section */
+
+.skill-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin: 30px 50px 0;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.section-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+.skill-underline {
+  margin-top: 80px;
+  width: 100%;
+}
+
+
+/* Experience */
+
+.exp-addBtn {
+  margin-top: 30px;
+}
+
+.exp-form {
+  width: 30%;
+  margin: 5% 0;
+}
+
+
+
+
+/* Project Section */
+.project-form {
+  grid-template-columns: repeat(3, 1fr);
+  padding-top: 2%;
+}
+
+.project-btns {
+  margin-top: 8%;
+}
+
+
+
+
+/* -------------------Resume Output -------------------- */
+
+.resume {
+  width: 850px;
+  max-width: 90%;
+  margin: 40px auto;
+  padding: 45px 55px;
+  background: white;
+  color: #222;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+}
+
+
+/* HEADER */
+.resume-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.resume-header h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  letter-spacing: 1px;
+  color: #111;
+}
+
+.resume-header p {
+  margin: 4px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+
+/* SECTIONS */
+
+.resume-section {
+  margin-top: 25px;
+}
+
+.resume-section h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #111;
+}
+
+.resume-section hr {
+  border: none;
+  border-top: 1px solid #222;
+  margin: 5px 0 15px;
+}
+
+
+
+/* EDUCATION */
+.education-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.education-item h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.education-item p {
+  margin: 2px 0;
+  font-size: 14px;
+}
+
+.education-item > div:last-child {
+  text-align: right;
+}
+
+
+
+/* SKILLS */
+ .skills-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skill-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 20px;
+}
+
+.skill-row h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.skill-row p {
+  margin: 0;
+  font-size: 14px;
+}
+
+
+
+/* EXPERIENCE */
+
+.experience-item {
+  margin-bottom: 15px;
+}
+
+.experience-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.experience-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.experience-header p {
+  margin: 2px 0;
+  font-size: 14px;
+}
+
+.experience-right {
+  text-align: right;
+}
+
+.experience-description {
+  margin-top: 8px;
+}
+
+.experience-description p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* PROJECTS */
+.project-item {
+  margin-bottom: 15px;
+}
+
+.project-item h3 {
+  margin: 0 0 3px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.project-item p {
+  margin: 2px 0;
+  font-size: 14px;
+}
+
+
+
+/* ACHIEVEMENTS */
+.resume-section > p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+
+
+/* LEADERSHIP */
+.resume-section:last-child {
+  margin-bottom: 30px;
+}
+
+
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+
+  .resume {
+    width: auto;
+    max-width: 92%;
+    padding: 30px 25px;
+  }
+
+  .resume-header h1 {
+    font-size: 26px;
+  }
+
+  .education-item {
+    flex-direction: column;
+  }
+
+  .education-item > div:last-child {
+    text-align: left;
+    margin-top: 5px;
+  }
+}
+
