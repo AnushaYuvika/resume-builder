@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import html2pdf from "html2pdf.js";
+import { useRef } from "react";
 
 const ResumeOutput = () => {
 
@@ -8,42 +10,68 @@ const ResumeOutput = () => {
   const [experiences, setExperiences] = useState([]);
   const [projects, setProjects] = useState([]);
   const [socials, setSocials] = useState([]);
+  const resumeRef = useRef();
 
   useEffect(() => {
-  const fetchResume = async () => {
-    const resumeId = sessionStorage.getItem("resumeId");
+    const fetchResume = async () => {
+      const resumeId = sessionStorage.getItem("resumeId");
 
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/resume/${resumeId}`
-      );
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/resume/${resumeId}`
+        );
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message);
+        if (!response.ok) {
+          throw new Error(data.message);
+        }
+
+        console.log("Resume data:", data);
+        console.log("Profile from API:", data.profile);
+
+        setProfile(data.profile);
+        setEducation(data.education || []);
+        setSkills(data.skills || []);
+        setExperiences(data.experience || []);
+        setProjects(data.projects || []);
+        setSocials(data.social || []);
+
+      } catch (error) {
+        console.log("Error fetching resume:", error);
       }
+    };
 
-      console.log("Resume data:", data);
-      console.log("Profile from API:", data.profile);
+    fetchResume();
+  }, []);
 
-      setProfile(data.profile);
-      setEducation(data.education || null);
-      setSkills(data.skills || []);
-      setExperiences(data.experience || []);
-      setProjects(data.projects || []);
-      setSocials(data.social || []);
 
-    } catch (error) {
-      console.log("Error fetching resume:", error);
-    }
+  const downloadResume = () => {
+    const element = resumeRef.current;
+
+    const options = {
+      margin: 0,
+      filename: "My-Resume.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "portrait"
+      }
+    };
+
+    html2pdf().set(options).from(element).save();
   };
 
-  fetchResume();
-}, []);
-
   return (
-    <div className='resume'>
+    
+    <div className='resume' ref={resumeRef}>
+      <button className='downloadPDF' onClick={downloadResume}>
+        Download Resume
+      </button>
+
+
       {/* HEADER */}
       <header className='resume-header'>
 
