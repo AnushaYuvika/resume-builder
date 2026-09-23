@@ -65,7 +65,6 @@ const ResumeOutput = () => {
   };
 
   return (
-    
     <div className='resume' ref={resumeRef}>
       <button className='downloadPDF' onClick={downloadResume}>
         Download Resume

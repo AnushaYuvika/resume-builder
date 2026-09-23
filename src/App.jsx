@@ -5,9 +5,9 @@ import Profile from './pages/Profile'
 import Education from './pages/Education'
 import Skills from './pages/Skills'
 import Projects from './pages/Projects'
-import ResumeOutput from './pages/resumeOutput'
 import Experience from './pages/Experience'
 import Social from './pages/Social'
+import ResumeOutput from './pages/ResumeOutput'
 
 const App = () => {
   return (
