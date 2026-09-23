@@ -53,7 +53,7 @@ const Experience = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/resume/${resumeId}`,
+        `https://resume-builder-vnjr.onrender.com/api/resume/${resumeId}`,
         {
           method: "PUT",
           headers: {
