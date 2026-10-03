@@ -1,86 +1,44 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { fetchResume, saveSection } from '../api';
 
 const Education = () => {
   const [course, setCourse] = useState("");
   const [year, setYear] = useState("");
   const [institution, setInstitution] = useState("");
   const [percentage, setPercentage] = useState("");
+  const [educations, setEducations] = useState([]);
 
   const navigate = useNavigate();
 
-  const handleAddEducation = () => {
-    const educationData = {
-      course,
-      year,
-      institution,
-      percentage
-    };
+  const clearForm = () => {
+    setCourse(""); setYear(""); setInstitution(""); setPercentage("");
+  };
 
-    sessionStorage.setItem("education", JSON.stringify(educationData));
+  const handleAddEducation = () => {
+    if (course.trim() === "") return;
+    setEducations([...educations, { course, year, institution, percentage }]);
+    clearForm();
+  };
+
+  const handleDeleteEducation = (index) => {
+    setEducations(educations.filter((_, i) => i !== index));
   };
 
   const handleSave = async () => {
-    const resumeId = sessionStorage.getItem("resumeId");
-
-    const educationData = {
-      education: [
-        {
-          course,
-          year,
-          institution,
-          percentage
-        }
-      ]
-    };
-
+    const pending = course.trim() ? [{ course, year, institution, percentage }] : [];
     try {
-      const response = await fetch(
-        `https://resume-builder-vnjr.onrender.com/api/resume/${resumeId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(educationData)
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      console.log("Education saved:", data);
-
+      await saveSection({ education: [...educations, ...pending] });
       navigate("/skill");
     } catch (error) {
-      console.log("Error saving education:", error);
+      alert("Could not save education: " + error.message);
     }
-  };
-  
-  const handleDeleteEducation = () => {
-    sessionStorage.removeItem("education");
-
-    setCourse("");
-    setYear("");
-    setInstitution("");
-    setPercentage("");
   };
 
   useEffect(() => {
-    const savedEducation = sessionStorage.getItem("education");
-
-    if (savedEducation) {
-      const parsedEducation = JSON.parse(savedEducation);
-
-      setCourse(parsedEducation.course);
-      setYear(parsedEducation.year);
-      setInstitution(parsedEducation.institution);
-      setPercentage(parsedEducation.percentage);
-    }
+    fetchResume().then((r) => { if (r?.education) setEducations(r.education); });
   }, []);
+
 
 
   return (
@@ -105,7 +63,11 @@ const Education = () => {
             onChange={(e) => setPercentage(e.target.value)} />
         </label>
         <div className='section-form-btns'>
-          <button id='deleteBtn' type='button'onClick={handleDeleteEducation}>DELETE</button>
+          {educations.map((edu, i) => (
+            <div key={i} className='section-btns'>
+              <button type='button' id='deleteBtn' onClick={() => handleDeleteEducation(i)}>DELETE</button>
+            </div>
+          ))}
           <button id='addBtn' type='button' onClick={handleAddEducation}>ADD EDUCATION</button>
         </div>
       </form>

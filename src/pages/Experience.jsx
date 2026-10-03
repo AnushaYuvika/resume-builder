@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { fetchResume,saveSection } from '../api';
 
 const Experience = () => {
   const [jobTitle, setJobTitle] = useState("");
@@ -45,45 +46,18 @@ const Experience = () => {
   };
 
   const handleSave = async () => {
-    const resumeId = sessionStorage.getItem("resumeId");
-
-    const experienceData = {
-      experience: experiences
-    };
-
+    const pending = jobTitle.trim()
+      ? [{ jobTitle, company, date, location, description }] : [];
     try {
-      const response = await fetch(
-        `https://resume-builder-vnjr.onrender.com/api/resume/${resumeId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(experienceData)
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      console.log("Experience saved:", data);
-
+      await saveSection({ experience: [...experiences, ...pending] });
       navigate("/projects");
     } catch (error) {
-      console.log("Error saving experience:", error);
+      alert("Could not save experience: " + error.message);
     }
   };
 
   useEffect(() => {
-    const savedExperiences = sessionStorage.getItem("experience");
-
-    if (savedExperiences) {
-      const parsedExperiences = JSON.parse(savedExperiences);
-      setExperiences(parsedExperiences);
-    }
+    fetchResume().then((r) => { if (r?.experience) setExperiences(r.experience); });
   }, []);
 
   return (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { fetchResume } from '../api';
 
 
 const Profile = () => {
@@ -13,41 +14,26 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const handleSave = async () => {
-    const resumeData = {
-      profile: {
-        firstName,
-        lastName,
-        phone,
-        address,
-        profileImage: null
-      }
-    };
-
     try {
-      const response = await fetch("http://localhost:8080/api/resume", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(resumeData)
+      await saveSection({
+        profile: { firstName, lastName, phone, address, profileImage: null }
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      console.log("Resume saved:", data);
-
-      sessionStorage.setItem("resumeId", data._id);
-
       navigate("/education");
-
     } catch (error) {
-      console.log("Error saving resume:", error);
+      alert("Could not save profile: " + error.message);
     }
   };
+
+  useEffect(() => {
+    fetchResume().then((r) => {
+      if (r?.profile) {
+        setFirstName(r.profile.firstName || "");
+        setLastName(r.profile.lastName || "");
+        setPhone(r.profile.phone || "");
+        setAddress(r.profile.address || "");
+      }
+    });
+  }, []);
   
 
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { fetchResume, saveSection } from '../api';
 
 const Projects = () => {
   const [projectName, setProjectName] = useState("");
@@ -21,7 +22,6 @@ const Projects = () => {
 
     const updatedProjects = [...projects, projectData]; 
     setProjects(updatedProjects); 
-    sessionStorage.setItem( "project", JSON.stringify(updatedProjects) );
 
     setProjectName("");
     setProjectDescription("");
@@ -29,52 +29,23 @@ const Projects = () => {
   };
 
   const handleSave = async () => {
-    const resumeId = sessionStorage.getItem("resumeId");
-
-    const projectsData = {
-      projects: projects
-    };
-
+    const pending = projectName.trim()
+      ? [{ projectName, projectDescription, projectLink }] : [];
     try {
-      const response = await fetch(
-        `https://resume-builder-vnjr.onrender.com/api/resume/${resumeId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(projectsData)
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      console.log("Projects saved:", data);
-
+      await saveSection({ projects: [...projects, ...pending] });
       navigate("/social");
     } catch (error) {
-      console.log("Error saving projects:", error);
+      alert("Could not save projects: " + error.message);
     }
   };
 
   useEffect(() => {
-    const savedProjects = sessionStorage.getItem("project");
-
-    if (savedProjects) {
-      const parsedProjects = JSON.parse(savedProjects);
-      setProjects(parsedProjects);
-    }
+    fetchResume().then((r) => { if (r?.projects) setProjects(r.projects); });
   }, []);
 
   const handleDeleteProject = (index) => {
     const updatedProjects = projects.filter((_, i) => i !== index);
     setProjects(updatedProjects);
-
-    sessionStorage.setItem( "project", JSON.stringify(updatedProjects) );
   };
 
   return (
@@ -99,12 +70,12 @@ const Projects = () => {
         <div className='section-form-btns project-btns'>
           {projects.map((project, index) => (
             <div key={index}>
-              <button id='deleteBtn' onClick={() => handleDeleteProject(index)}>
+              <button id='deleteBtn' type='button' onClick={() => handleDeleteProject(index)}>
                 DELETE
               </button>
             </div>
           ))}
-          <button id='addBtn' onClick={handleAddProject}>ADD PROJECT</button>
+          <button id='addBtn' type='button' onClick={handleAddProject}>ADD PROJECT</button>
         </div>
       </form>
       
@@ -115,7 +86,7 @@ const Projects = () => {
         <button id='next'>
           <Link to='/social'>NEXT</Link>
         </button>
-        <button id='save' onClick={handleSave}>SAVE AND CONTINUE</button>
+        <button id='save' type='button' onClick={handleSave}>SAVE AND CONTINUE</button>
       </div>
     </div>
   )

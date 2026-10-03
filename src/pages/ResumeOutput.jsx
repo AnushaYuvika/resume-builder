@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import html2pdf from "html2pdf.js";
 import { useRef } from "react";
+import { fetchResume } from '../api';
 
 const ResumeOutput = () => {
 
@@ -13,34 +14,15 @@ const ResumeOutput = () => {
   const resumeRef = useRef();
 
   useEffect(() => {
-    const fetchResume = async () => {
-      const resumeId = sessionStorage.getItem("resumeId");
-
-      try {
-        const response = await fetch(
-          `https://resume-builder-vnjr.onrender.com/api/resume/${resumeId}`
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message);
-        }
-
-        console.log("Resume data:", data);
-        console.log("Profile from API:", data.profile);
-
-        setProfile(data.profile);
-        setEducation(data.education || []);
-        setSkills(data.skills || []);
-        setExperiences(data.experience || []);
-        setProjects(data.projects || []);
-        setSocials(data.social || []);
-
-      } catch (error) {
-        console.log("Error fetching resume:", error);
-      }
-    };
+    fetchResume().then((data) => {
+      if (!data) return;
+      setProfile(data.profile || null);
+      setEducation(data.education || []);
+      setSkills(data.skills || []);
+      setExperiences(data.experience || []);
+      setProjects(data.projects || []);
+      setSocials(data.social || []);
+    });
 
     fetchResume();
   }, []);
@@ -110,7 +92,7 @@ const ResumeOutput = () => {
 
             <div>
               <p>{edu.year}</p>
-              <p>CGPA: {edu.percentage}</p>
+              <p>Percentage: {edu.percentage}</p>
             </div>
 
           </div>

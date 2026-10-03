@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { fetchResume, saveSection } from '../api';
 
 const Social = () => {
   const [socialLinks, setSocialLinks] = useState("");
@@ -34,45 +35,18 @@ const Social = () => {
   };
 
   const handleSave = async () => {
-    const resumeId = sessionStorage.getItem("resumeId");
-
-    const socialData = {
-      social: socials
-    };
-
+    const hasInput = socialLinks.trim() || achievements.trim() || leadership.trim();
+    const pending = hasInput ? [{ socialLinks, achievements, leadership }] : [];
     try {
-      const response = await fetch(
-        `https://resume-builder-vnjr.onrender.com/api/resume/${resumeId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(socialData)
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      console.log("Social saved:", data);
-
+      await saveSection({ social: [...socials, ...pending] });
       navigate("/output");
     } catch (error) {
-      console.log("Error saving social:", error);
+      alert("Could not save social details: " + error.message);
     }
   };
 
   useEffect(() => {
-    const savedSocials = sessionStorage.getItem("social");
-
-    if (savedSocials) {
-      const parsedSocials = JSON.parse(savedSocials);
-      setSocials(parsedSocials);
-    }
+    fetchResume().then((r) => { if (r?.social) setSocials(r.social); });
   }, []);
 
   const handleDeleteSocial = (index) => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { fetchResume, saveSection } from '../api';
 
 const Skills = () => {
 
@@ -37,45 +38,18 @@ const Skills = () => {
   };
 
   const handleSave = async () => {
-    const resumeId = sessionStorage.getItem("resumeId");
-
-    const skillsData = {
-      skills: skills
-    };
-
+    const pending = category.trim() && skillValue.trim()
+      ? [{ category, value: skillValue }] : [];
     try {
-      const response = await fetch(
-        `https://resume-builder-vnjr.onrender.com/api/resume/${resumeId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(skillsData)
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      console.log("Skills saved:", data);
-
+      await saveSection({ skills: [...skills, ...pending] });
       navigate("/experience");
     } catch (error) {
-      console.log("Error saving skills:", error);
+      alert("Could not save skills: " + error.message);
     }
   };
 
   useEffect(() => {
-    const savedSkills = sessionStorage.getItem("skills");
-
-    if (savedSkills) {
-      const parsedSkills = JSON.parse(savedSkills);
-      setSkills(parsedSkills);
-    }
+    fetchResume().then((r) => { if (r?.skills) setSkills(r.skills); });
   }, []);
 
   return (
@@ -120,7 +94,7 @@ const Skills = () => {
           <Link to='/experience'>NEXT</Link>
         </button>
 
-        <button id='save' onClick={handleSave}>
+        <button id='save' type='button' onClick={handleSave}>
           SAVE AND CONTINUE
         </button>
       </div>
